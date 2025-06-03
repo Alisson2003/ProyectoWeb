@@ -10,6 +10,8 @@ export const Forgot = () => {
 
     const sendMail = (data) => {
         const url = `${import.meta.env.VITE_BACKEND_URL}/recuperarpassword`
+
+        
         fetchDataBackend(url, data,'POST')
     }
 
@@ -60,6 +62,7 @@ export const Forgot = () => {
             bg-no-repeat bg-cover bg-center sm:block hidden
             ">
             </div>
+
         </div>
     )
 }

@@ -8,11 +8,14 @@ function useFetch(){
     //hace una peticion                                                       
     const fetchDataBackend = async (url, form = null, method = 'POST') => {
         try{
+            console.log(url);
+            
             let respuesta
             if (method === 'POST') {
-                respuesta = axios.post(url, form) //axios maneja codigo asincrono
+                respuesta = await axios.post(url, form) //axios maneja codigo asincrono
+                console.log(respuesta)
             } else if (method === 'GET') {
-                respuesta = axios.get(url)
+                respuesta = await axios.get(url)
             }
             toast.success(respuesta?.data?.msg)
             return respuesta?.data
