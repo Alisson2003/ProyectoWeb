@@ -1,6 +1,4 @@
-
 import axios from 'axios';
-
 import {toast} from 'react-toastify';
 
 function useFetch(){  
@@ -29,3 +27,4 @@ function useFetch(){
 }
 
 export default  useFetch
+
