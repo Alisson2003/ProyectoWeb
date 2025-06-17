@@ -8,7 +8,6 @@ import mongoose from "mongoose"
 const registro = async (req, res) => {
     //1
     const {email, password} = req.body
-
     //2
     if (Object.values(req.body).includes("")) return res.status(400).json({msg:"Todos los campos son obligtorios"})
 
@@ -22,19 +21,15 @@ const registro = async (req, res) => {
     const token = nuevoVeterinario.crearToken()
     await sendMailToRegister(email,token)
 
-
     await nuevoVeterinario.save()
-
     //4
-
     res.status(200).json({msg:"Verifica tu correo"})
 
 }
 
 const confirmarMail = async (req, res) => {
     //1
-    if (!(req.params.token)) return res.status(400).json({msg:"Lo sentimos, no se puede validar la cuenta"})
-    
+    if (!(req.params.token)) return res.status(400).json({msg:"Lo sentimos, no se puede validar la cuenta"})    
     //2
     const veterinarioBDD = await Veterinario.findOne({token:req.params.token})
 
@@ -43,7 +38,6 @@ const confirmarMail = async (req, res) => {
     veterinarioBDD.token = null
     veterinarioBDD.confirmEmail=true
     await veterinarioBDD.save()
-
     //4
     res.status(200).json({msg:"Token confirmado, ya puedes iniciar sesión"})
 }
