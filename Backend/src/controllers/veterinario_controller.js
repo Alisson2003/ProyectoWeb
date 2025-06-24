@@ -134,7 +134,7 @@ const crearNuevoPassword = async (req, res) => {
 
     res.status(200).json({msg: "Felicitaciones, ya puedes iniciar sesion con tu nuevo password"})
 }
-
+/*
 const login = async(req,res)=>{
     const {email,password} = req.body
 
@@ -166,8 +166,32 @@ const login = async(req,res)=>{
         direccion 
         
     })
+}*/
+
+const login = async(req,res)=>{
+    const {email,password} = req.body
+    if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
+    const veterinarioBDD = await Veterinario.findOne({email}).select("-status -__v -token -updatedAt -createdAt")
+    if(veterinarioBDD?.confirmEmail===false) return res.status(403).json({msg:"Lo sentimos, debe verificar su cuenta"})
+    if(!veterinarioBDD) return res.status(404).json({msg:"Lo sentimos, el usuario no se encuentra registrado"})
+    const verificarPassword = await veterinarioBDD.matchPassword(password)
+    if(!verificarPassword) return res.status(401).json({msg:"Lo sentimos, el password no es el correcto"})
+    const {nombre,apellido,direccion,telefono,_id,rol} = veterinarioBDD
+	
+    const token = crearTokenJWT(veterinarioBDD._id,veterinarioBDD.rol)
+
+    res.status(200).json({
+        token,
+        rol,
+        nombre,
+        apellido,
+        direccion,
+        telefono,
+        _id,
+        email:veterinarioBDD.email
+    })
 }
-/*
+
 const perfil =(req,res)=>{
 		const {token,confirmEmail,createdAt,updatedAt,__v,...datosPerfil} = req.veterinarioBDD
     res.status(200).json(datosPerfil)
@@ -196,7 +220,7 @@ const actualizarPerfil = async (req,res)=>{
     await veterinarioBDD.save()
     console.log(veterinarioBDD)
     res.status(200).json(veterinarioBDD)
-}*/
+}
 
 export {
     registro,
@@ -205,7 +229,6 @@ export {
     comprobarTokenPasword,
     crearNuevoPassword,
     login,
-   /*
     perfil,
-    actualizarPerfil*/
+    actualizarPerfil
 }

@@ -3,17 +3,39 @@ import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router';
 import useFetch from '../hooks/useFetch';
 import { ToastContainer } from 'react-toastify';
+import storeAuth from '../context/storeAuth';
 
-
+/*
 const Login = () => {
     const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm()
     const { fetchDataBackend } = useFetch()
+    const { setToken, setRol } = storeAuth()
 
     const loginUser = async(data) => {
         const url = `${import.meta.env.VITE_BACKEND_URL}/login`
-        const response = await fetchDataBackend(url, data,'POST')
+        const response = await fetchDataBackend(url, data,'POST',null)
+        setToken(response.token)
+        setRol(response.rol)
+        if(response){
+            navigate('/dashboard')
+        }
+    }
+}*/
+
+    const Login = () => {
+    const navigate = useNavigate()
+    const [showPassword, setShowPassword] = useState(false);
+    const { register, handleSubmit, formState: { errors } } = useForm()
+    const { fetchDataBackend } = useFetch()
+    const { setToken, setRol } = storeAuth()
+
+    const loginUser = async(data) => {
+        const url = `${import.meta.env.VITE_BACKEND_URL}/login`
+        const response = await fetchDataBackend(url, data,'POST', null)
+        setToken(response.token)
+        setRol(response.rol)
         if(response){
             navigate('/dashboard')
         }
@@ -32,14 +54,14 @@ const Login = () => {
                 <div className="md:w-4/5 sm:w-full">
                     <h1 className="text-3xl font-semibold mb-2 text-center uppercase text-gray-500">Bienvenido(a) de nuevo</h1>
                     <small className="text-gray-400 block my-4 text-sm">Por favor ingresa tus datos</small>
-
+                    
                     <form onSubmit={handleSubmit(loginUser)}>
 
                         {/* Correo electrónico */}
                         <div className="mb-3">
                             <label className="mb-2 block text-sm font-semibold">Correo electrónico</label>
                             <input type="email" placeholder="Ingresa tu correo" className="block w-full rounded-md border border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-2 text-gray-500" 
-                                {...register("email", { required: "El correo es obligatorio" })}
+                                 {...register("email", { required: "El correo es obligatorio" })}
                             />
                                 {errors.email && <p className="text-red-800">{errors.email.message}</p>}
                         </div>

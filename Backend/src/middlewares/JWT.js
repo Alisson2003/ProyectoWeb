@@ -1,4 +1,3 @@
-/*
 import jwt from "jsonwebtoken"
 import Veterinario from "../models/veterinario.js"
 
@@ -14,8 +13,9 @@ const verificarTokenJWT = async (req, res, next) => {
     if (!authorization) return res.status(401).json({ msg: "Acceso denegado: token no proporcionado o inválido" })
 
     try {
-        const token = authorization.split(" ")[1];
+        const token = authorization.split(' ')[1];
         const { id, rol } = jwt.verify(token,process.env.JWT_SECRET)
+        
         if (rol === "veterinario") {
             req.veterinarioBDD = await Veterinario.findById(id).lean().select("-password")
             next()
@@ -31,4 +31,3 @@ export {
     verificarTokenJWT 
 }
 
-*/
