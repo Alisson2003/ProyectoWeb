@@ -15,9 +15,10 @@ const verificarTokenJWT = async (req, res, next) => {
     try {
         const token = authorization.split(' ')[1];
         const { id, rol } = jwt.verify(token,process.env.JWT_SECRET)
-        
-        if (rol === "veterinario") {
+        console.log(id,rol)
+        if (rol === "admin") {
             req.veterinarioBDD = await Veterinario.findById(id).lean().select("-password")
+            console.log(req.veterinarioBDD)
             next()
         }
     } catch (error) {

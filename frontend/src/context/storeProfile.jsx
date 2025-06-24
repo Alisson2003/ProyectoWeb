@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 
 const getAuthHeaders = () => {
@@ -17,14 +18,27 @@ const storeProfile = create((set) => ({
         
         user: null,
         clearUser: () => set({ user: null }),
-        profile: async () => {
+        profile: async() => {
             try {
                 const url = `${import.meta.env.VITE_BACKEND_URL}/perfil`;
+
                 const respuesta = await axios.get(url, getAuthHeaders())
                 console.log(respuesta)
                 set({ user: respuesta.data })
             } catch (error) {
                 console.error(error)
+            }
+        },
+
+        updateProfile:async(data,id)=>{
+            try {
+                const url = `${import.meta.env.VITE_BACKEND_URL}/veterinario/${id}`
+                const respuesta = await axios.put(url, data,getAuthHeaders())
+                set({ user: respuesta.data })
+                toast.success("Perfil actualizado correctamente")
+            } catch (error) {
+                console.log(error)
+                toast.error(error.response?.data?.msg)
             }
         }
     })

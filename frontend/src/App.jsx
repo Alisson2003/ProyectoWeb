@@ -29,6 +29,7 @@ function App() {
   const { token } = storeAuth()
 
   useEffect(() => {
+  
     if(token){
       profile()
     }
