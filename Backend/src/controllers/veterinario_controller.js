@@ -164,12 +164,16 @@ const login = async(req,res)=>{
 
 const login = async(req,res)=>{
     const {email,password} = req.body
-    if (Object.values(req.body).includes("")) return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
+    if (Object.values(req.body).includes("")) 
+        return res.status(404).json({msg:"Lo sentimos, debes llenar todos los campos"})
     const veterinarioBDD = await Veterinario.findOne({email}).select("-status -__v -token -updatedAt -createdAt")
-    if(veterinarioBDD?.confirmEmail===false) return res.status(403).json({msg:"Lo sentimos, debe verificar su cuenta"})
-    if(!veterinarioBDD) return res.status(404).json({msg:"Lo sentimos, el usuario no se encuentra registrado"})
+    if(veterinarioBDD?.confirmEmail===false) 
+        return res.status(403).json({msg:"Lo sentimos, debe verificar su cuenta"})
+    if(!veterinarioBDD) 
+        return res.status(404).json({msg:"Lo sentimos, el usuario no se encuentra registrado"})
     const verificarPassword = await veterinarioBDD.matchPassword(password)
-    if(!verificarPassword) return res.status(401).json({msg:"Lo sentimos, el password no es el correcto"})
+    if(!verificarPassword) 
+        return res.status(401).json({msg:"Lo sentimos, el password no es el correcto"})
     const {nombre,apellido,direccion,telefono,_id,rol} = veterinarioBDD
 	
     const token = crearTokenJWT(veterinarioBDD._id,veterinarioBDD.rol)
@@ -215,6 +219,20 @@ const actualizarPerfil = async (req,res)=>{
     console.log(veterinarioBDD)
     res.status(200).json(veterinarioBDD)
 }
+const actualizarPassword = async (req,res)=>{
+    const veterinarioBDD = await Veterinario.findById(req.veterinarioBDD._id)
+    if(!veterinarioBDD) 
+        return res.status(404).json({msg:`Lo sentimos, no existe el veterinario ${id}`})
+    const verificarPassword = await veterinarioBDD.matchPassword(req.body.passwordactual)
+    if(!verificarPassword) 
+        return res.status(404).json({msg:"Lo sentimos, el password actual no es el correcto"})
+    veterinarioBDD.password = await veterinarioBDD.encrypPassword(req.body.passwordnuevo)
+    await veterinarioBDD.save()
+    
+    res.status(200).json({msg:"Password actualizado correctamente"})
+}
+
+
 
 export {
     registro,
@@ -224,5 +242,6 @@ export {
     crearNuevoPassword,
     login,
     perfil,
-    actualizarPerfil
+    actualizarPerfil,
+    actualizarPassword
 }

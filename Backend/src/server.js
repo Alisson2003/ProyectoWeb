@@ -4,6 +4,7 @@ import express from 'express';
 import dotenv from 'dotenv'; // para las variables globales
 import cors from 'cors'; //comunicacion entre backend y frontend sin importar el dominio
 import routerVeterinarios from './routers/veterinario_routes.js'
+import routerPacientes from './routers/paciente_routes.js';
 
 
 // Inicializaciones (crear instancias)
@@ -22,8 +23,11 @@ app.get('/',(req,res)=>{
     res.send("Server on")
 })
 
-//rutas 
+//rutas veterinario
 app.use('/api',routerVeterinarios)
+
+//Ruta Pacientes
+app.use('/api',routerPacientes)
 
 //Rutas que no existen
 app.use((req, res) => res.status(404).send("No encontrado - 404"))

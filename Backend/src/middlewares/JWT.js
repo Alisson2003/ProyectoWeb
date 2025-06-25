@@ -16,8 +16,9 @@ const verificarTokenJWT = async (req, res, next) => {
         const token = authorization.split(' ')[1];
         const { id, rol } = jwt.verify(token,process.env.JWT_SECRET)
         console.log(id,rol)
-        if (rol === "admin") {
-            req.veterinarioBDD = await Veterinario.findById(id).lean().select("-password")
+        if (rol === "veterinario") {
+            //req.veterinarioBDD = await Veterinario.findById(id).lean().select("-password")
+            req.veterinarioBDD = await Veterinario.findById(id).select("-password")
             console.log(req.veterinarioBDD)
             next()
         }
